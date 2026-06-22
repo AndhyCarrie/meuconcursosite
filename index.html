@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MeuConcurso — Lembre na hora da prova</title>
+
+<!--
+  ============================================================
+  COMO USAR ESTE ESBOÇO  (versão teste de validação)
+  ------------------------------------------------------------
+  1. NOME: app está como "MeuConcurso" (Ctrl+F para trocar).
+  2. FORMULÁRIO: ainda não envia. Conecte os action="#" a Formspree /
+     Mailchimp / ConvertKit. Hoje só mostram mensagem de teste.
+  3. LOGO: a página carrega um arquivo "logo.png" da MESMA pasta do HTML.
+     Para testar variações, basta substituir esse arquivo (ou trocar o
+     nome "logo.png" nos 3 lugares: as 2 tags <img> e o <link rel=icon>).
+  4. VALIDAÇÃO: o objetivo da página é medir interesse. Acompanhe
+     (a) taxa de cadastro e (b) quais "chips" de concurso são mais
+     clicados — isso mostra QUAIS públicos querem o app.
+  ============================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="icon" href="logo.png">
+
+<style>
+  :root{
+    --ink:#231C17;--ink-soft:#5a4f47;--paper:#FBF6EE;--card:#FFFFFF;
+    --orange:#EC5A1E;--orange-deep:#C9430F;--peach:#FBE3D4;--pine:#1F4D3F;
+    --line:#E7DCCB;--radius:18px;--maxw:1120px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'Inter',system-ui,sans-serif;font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  h1,h2,h3{font-family:'Bricolage Grotesque','Inter',sans-serif;line-height:1.06;letter-spacing:-0.02em;margin:0;font-weight:700;}
+  p{margin:0 0 1rem;}
+  a{color:inherit;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px;}
+  .eyebrow{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);display:inline-flex;align-items:center;gap:.5rem;}
+  .eyebrow::before{content:"";width:22px;height:2px;background:var(--orange);display:inline-block;}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:1.02rem;padding:.9rem 1.5rem;border-radius:999px;border:none;cursor:pointer;text-decoration:none;transition:transform .15s ease,background .15s ease;}
+  .btn-primary{background:var(--orange-deep);color:#fff;box-shadow:0 8px 22px -10px rgba(201,67,15,.7);}
+  .btn-primary:hover{background:#a83809;transform:translateY(-2px);}
+  .btn:disabled{opacity:.65;cursor:not-allowed;transform:none;}
+
+  header.site{position:sticky;top:0;z-index:50;background:rgba(251,246,238,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:70px;}
+  .brand{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:-.03em;display:flex;align-items:center;gap:.5rem;}
+  .brand .logo{width:34px;height:34px;flex:0 0 auto;object-fit:contain;}
+  .nav .btn{padding:.6rem 1.15rem;font-size:.95rem;}
+
+  /* HERO */
+  .hero{padding:60px 0 70px;}
+  .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:54px;align-items:center;}
+  .hero h1{font-size:clamp(2.2rem,4.6vw,3.5rem);font-weight:800;}
+  .hero h1 .hl{color:var(--orange);}
+  .hero .lead{font-size:1.18rem;color:var(--ink-soft);max-width:34ch;margin:1.3rem 0 1.8rem;}
+  .signup{display:flex;gap:.6rem;flex-wrap:wrap;max-width:480px;}
+  .signup input[type=email]{flex:1;min-width:210px;padding:.95rem 1.1rem;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:1rem;font-family:inherit;color:var(--ink);}
+  .signup input[type=email]:focus{outline:3px solid var(--peach);border-color:var(--orange);}
+  .micro{font-size:.9rem;color:var(--ink-soft);margin-top:.95rem;display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;}
+  .scarce{display:inline-flex;align-items:center;gap:.45rem;background:var(--peach);color:var(--orange-deep);font-weight:600;font-size:.85rem;padding:.35rem .8rem;border-radius:999px;margin-bottom:1.4rem;font-family:'Bricolage Grotesque',sans-serif;}
+  .scarce .live{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:pulse 1.6s infinite;}
+  @keyframes pulse{0%,100%{opacity:.4;transform:scale(1);}50%{opacity:1;transform:scale(1.5);}}
+
+  /* FLASHCARD */
+  .deck-wrap{display:flex;flex-direction:column;align-items:center;gap:18px;width:100%;}
+  .deck{position:relative;width:100%;max-width:355px;height:352px;}
+  .shuffle{display:inline-flex;align-items:center;gap:.5rem;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:.92rem;color:var(--orange-deep);background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:.6rem 1.2rem;cursor:pointer;transition:border-color .15s ease,transform .15s ease;}
+  .shuffle:hover{border-color:var(--orange);transform:translateY(-2px);}
+  .deck .behind{position:absolute;inset:0;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);}
+  .deck .behind.b1{transform:rotate(-6deg) translateY(8px);background:var(--peach);}
+  .deck .behind.b2{transform:rotate(4deg) translateY(4px);}
+  .flashcard{position:absolute;inset:0;perspective:1400px;cursor:pointer;}
+  .fc-inner{position:relative;width:100%;height:100%;transition:transform .6s cubic-bezier(.7,.1,.2,1);transform-style:preserve-3d;}
+  .flashcard.flipped .fc-inner{transform:rotateY(180deg);}
+  .fc-face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:var(--radius);background:var(--card);border:1px solid var(--line);box-shadow:0 30px 60px -28px rgba(35,28,23,.4);padding:30px;display:flex;flex-direction:column;}
+  .fc-back{transform:rotateY(180deg);background:var(--ink);color:#fff;border-color:var(--ink);}
+  .fc-tag{font-family:'Bricolage Grotesque',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange-deep);}
+  .fc-back .fc-tag{color:var(--peach);}
+  .fc-q{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:1.42rem;line-height:1.15;margin-top:14px;letter-spacing:-.01em;}
+  .fc-a{font-size:.98rem;line-height:1.45;margin-top:12px;}
+  .fc-hint{margin-top:auto;font-size:.82rem;color:var(--ink-soft);display:flex;align-items:center;gap:.45rem;}
+  .fc-back .fc-hint{color:#cdbfae;}
+  .fc-hint .pulse{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:pulse 1.8s infinite;}
+
+  section{padding:76px 0;}
+  .section-head{max-width:660px;margin-bottom:46px;}
+  .section-head h2{font-size:clamp(1.9rem,3.5vw,2.7rem);margin:1rem 0 .8rem;}
+  .section-head p{color:var(--ink-soft);font-size:1.12rem;}
+  .center-head{text-align:center;margin-left:auto;margin-right:auto;}
+  .center-head .eyebrow{justify-content:center;}
+
+  /* AGITATION */
+  .pain-sec{background:var(--ink);color:var(--paper);}
+  .pain-sec .section-head h2{color:#fff;}
+  .pain-sec .section-head p{color:#cdbfae;}
+  .pain-sec .eyebrow{color:#ff8a5c;}
+  .pain-sec .eyebrow::before{background:#ff8a5c;}
+  .pains{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;}
+  .pain{border:1px solid #3a302a;border-radius:var(--radius);padding:26px;background:#2b231d;}
+  .pain h3{font-size:1.15rem;color:#fff;margin-bottom:.5rem;}
+  .pain p{color:#c3b6a8;font-size:.97rem;margin:0;}
+  .pain .ic{font-size:1.5rem;margin-bottom:10px;}
+
+  /* FEATURES */
+  .feats{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .feat{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:30px;transition:transform .2s ease,box-shadow .2s ease;}
+  .feat:hover{transform:translateY(-4px);box-shadow:0 22px 44px -26px rgba(35,28,23,.45);}
+  .feat .ic{width:46px;height:46px;border-radius:12px;background:var(--peach);display:flex;align-items:center;justify-content:center;margin-bottom:18px;}
+  .feat h3{font-size:1.2rem;margin-bottom:.5rem;}
+  .feat p{color:var(--ink-soft);font-size:.97rem;margin:0;}
+
+  /* COMPARISON */
+  .vs-sec{background:#fff;}
+  .vs-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;}
+  .vs-col{border-radius:var(--radius);padding:32px;}
+  .vs-old{background:var(--paper);border:1px solid var(--line);}
+  .vs-new{background:var(--ink);color:#fff;border:1px solid var(--ink);}
+  .vs-col h3{font-size:1.25rem;margin-bottom:.3rem;}
+  .vs-old h3{color:var(--ink-soft);}
+  .vs-new h3{color:#fff;}
+  .vs-sub{font-size:.9rem;margin-bottom:20px;}
+  .vs-old .vs-sub{color:var(--ink-soft);}
+  .vs-new .vs-sub{color:#cdbfae;}
+  .vs-row{display:flex;gap:.7rem;align-items:flex-start;padding:13px 0;border-top:1px solid;}
+  .vs-old .vs-row{border-color:var(--line);}
+  .vs-new .vs-row{border-color:#3a302a;}
+  .vs-row .mk{flex:0 0 auto;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-top:1px;}
+  .vs-old .mk{background:#efe1cf;color:#b0916f;}
+  .vs-new .mk{background:var(--orange);color:#fff;}
+  .vs-row span{font-size:.98rem;}
+  .vs-old .vs-row span{color:var(--ink-soft);}
+  .vs-new .vs-row span{color:#f3ece4;}
+
+  /* MODO FÉRIAS */
+  .spotlight{background:linear-gradient(135deg,var(--pine),#163a2f);color:#fff;}
+  .spot-grid{display:grid;grid-template-columns:1fr 1fr;gap:50px;align-items:center;}
+  .spotlight .eyebrow{color:#7fd1b0;}
+  .spotlight .eyebrow::before{background:#7fd1b0;}
+  .spotlight h2{font-size:clamp(1.9rem,3.4vw,2.6rem);margin:1rem 0 1rem;}
+  .spotlight p{color:#d4e8df;font-size:1.1rem;}
+  .spot-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:var(--radius);padding:34px;}
+  .spot-card .big{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:2.4rem;color:#fff;line-height:1.05;}
+  .spot-card .big span{color:#7fd1b0;}
+  .spot-list{list-style:none;padding:0;margin:18px 0 0;}
+  .spot-list li{display:flex;gap:.7rem;align-items:flex-start;margin-bottom:.8rem;color:#e6f2ec;font-size:1rem;}
+  .spot-list li::before{content:"";flex:0 0 auto;margin-top:.5rem;width:7px;height:7px;border-radius:50%;background:#7fd1b0;}
+
+  /* VIP / BETA */
+  .vip{background:var(--peach);}
+  .vip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:42px;}
+  .vipc{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px;text-align:center;}
+  .vipc .ic{font-size:1.6rem;}
+  .vipc h3{font-size:1.15rem;margin:.6rem 0 .4rem;}
+  .vipc p{color:var(--ink-soft);font-size:.96rem;margin:0;}
+  .offer-box{background:var(--ink);color:#fff;border-radius:26px;padding:50px 44px;text-align:center;max-width:760px;margin:0 auto;}
+  .offer-box h2{font-size:clamp(1.8rem,3.4vw,2.5rem);color:#fff;margin-bottom:.8rem;}
+  .offer-box .sub{color:#cdbfae;font-size:1.05rem;margin-bottom:1.6rem;}
+  .offer-box .signup{margin:0 auto;justify-content:center;}
+  .offer-box .signup input[type=email]{border-color:#4a3f37;background:#2b231d;color:#fff;}
+  .offer-box .micro{color:#cdbfae;justify-content:center;margin-top:1.1rem;}
+  .chips{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin:0 auto 1.6rem;max-width:580px;}
+  .chip{background:transparent;border:1.5px solid #4a3f37;color:#e6ddd4;border-radius:999px;padding:.45rem 1rem;font-size:.9rem;font-family:'Inter',sans-serif;cursor:pointer;transition:all .15s ease;}
+  .chip:hover{border-color:var(--orange);}
+  .chip.on{background:var(--orange);border-color:var(--orange);color:#fff;}
+  .chips-label{color:#cdbfae;font-size:.92rem;margin-bottom:.8rem;}
+  .custom-concurso{display:none;max-width:480px;margin:0 auto 1.2rem;}
+  .custom-concurso.show{display:block;}
+  .custom-concurso input[type=text]{width:100%;padding:.9rem 1.1rem;border-radius:999px;border:1.5px solid #4a3f37;background:#2b231d;color:#fff;font-size:1rem;font-family:inherit;}
+  .custom-concurso input[type=text]:focus{outline:3px solid var(--orange);border-color:var(--orange);}
+  .custom-concurso input[type=text]::placeholder{color:#9c8d7e;}
+
+  /* FAQ */
+  .faq-list{max-width:760px;}
+  details{border-bottom:1px solid var(--line);padding:6px 0;}
+  summary{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:1.1rem;padding:18px 40px 18px 0;cursor:pointer;list-style:none;position:relative;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:4px;top:14px;font-size:1.6rem;color:var(--orange);font-weight:400;transition:transform .2s ease;}
+  details[open] summary::after{transform:rotate(45deg);}
+  details p{color:var(--ink-soft);padding:0 40px 18px 0;margin:0;}
+
+  /* FINAL */
+  .final{text-align:center;}
+  .final h2{font-size:clamp(2rem,4vw,3rem);max-width:18ch;margin:0 auto 1rem;}
+  .final p{color:var(--ink-soft);font-size:1.15rem;max-width:46ch;margin:0 auto 1.8rem;}
+  .final .signup{margin:0 auto;justify-content:center;}
+
+  footer{background:var(--ink);color:#c3b6a8;padding:44px 0;font-size:.92rem;}
+  .foot{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
+  .foot .brand{color:#fff;}
+
+  .toast{margin-top:1rem;background:var(--pine);color:#fff;padding:.85rem 1.1rem;border-radius:12px;font-size:.95rem;display:none;}
+  .toast.show{display:block;}
+  .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.in{opacity:1;transform:none;}
+
+  @media(max-width:860px){
+    .hero-grid,.spot-grid,.vs-grid{grid-template-columns:1fr;gap:32px;}
+    .deck-wrap{order:-1;}
+    .pains,.feats,.vip-grid{grid-template-columns:1fr;}
+    .hero{padding:42px 0 54px;}
+    section{padding:58px 0;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;}
+    .reveal{opacity:1;transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site">
+  <div class="wrap nav">
+    <div class="brand"><img class="logo" src="/images/logo.png"alt="" aria-hidden="true">MeuConcurso</div>
+    <a href="#vip" class="btn btn-primary">Entrar na lista VIP</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="scarce"><span class="live"></span>Acesso antecipado · vagas do beta limitadas</span>
+      <h1>O que separa o aprovado do reprovado quase nunca é estudar mais. É <span class="hl">lembrar na hora da prova.</span></h1>
+      <p class="lead">MeuConcurso fixa o que você estuda com revisão espaçada e te faz lembrar no dia que decide tudo. Entre na lista VIP e seja dos primeiros a testar o beta.</p>
+
+      <form class="signup" action="https://formspree.io/f/mkolwlvp" method="POST" data-form>
+        <input type="hidden" name="_subject" value="Novo lead — Hero — MeuConcurso">
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+        <input type="email" name="email" placeholder="Seu melhor e-mail" required aria-label="Seu e-mail">
+        <button type="submit" class="btn btn-primary">Quero acesso antecipado</button>
+      </form>
+      <div class="toast" data-toast>Você está na lista VIP do beta. Avisaremos você em primeira mão. ✦</div>
+      <p class="micro">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="#1F4D3F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Grátis para entrar. Sem spam. Saia quando quiser.
+      </p>
+    </div>
+
+    <div class="deck-wrap">
+      <div class="deck">
+        <div class="behind b1"></div>
+        <div class="behind b2"></div>
+        <div class="flashcard" data-card tabindex="0" role="button" aria-label="Virar flashcard de exemplo">
+          <div class="fc-inner">
+            <div class="fc-face fc-front">
+              <span class="fc-tag" data-tag>Direito Administrativo</span>
+              <div class="fc-q" data-q>O princípio da legalidade vincula a Administração do mesmo modo que o particular?</div>
+              <div class="fc-hint"><span class="pulse"></span> Toque para ver a resposta</div>
+            </div>
+            <div class="fc-face fc-back">
+              <span class="fc-tag">Resposta</span>
+              <div class="fc-q" data-atitle>Não — de forma inversa</div>
+              <div class="fc-a" data-adetail>O particular pode tudo o que a lei não proíbe (autonomia da vontade); a Administração só pode o que a lei autoriza — legalidade estrita (art. 37, caput, CF/88).</div>
+              <div class="fc-hint">Toque para voltar</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button type="button" class="shuffle" data-shuffle>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M4 7h11l-3-3M20 17H9l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Sortear outra pergunta
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- AGITATION -->
+<section class="pain-sec">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">A verdade que ninguém te conta</span>
+      <h2>Você não estuda de menos. Você esquece rápido demais.</h2>
+      <p>A culpa não é sua. Sem revisão na hora certa, a maior parte do que você estudou some em poucos dias — e na prova vem aquele branco numa questão que você jurava que sabia.</p>
+    </div>
+    <div class="pains">
+      <div class="pain reveal"><div class="ic">📚</div><h3>Horas que evaporam</h3><p>Você leu o PDF inteiro semana passada. Hoje lembra de uma fração. Reler tudo de novo é tempo que você não tem.</p></div>
+      <div class="pain reveal"><div class="ic">⏳</div><h3>Mais um ano na fila</h3><p>Cada ciclo mal revisado adia a aprovação por mais doze meses. Quanto vale esse ano da sua vida?</p></div>
+      <div class="pain reveal"><div class="ic">😮‍💨</div><h3>O cansaço que faz desistir</h3><p>A rotina pesa, bate a culpa de parar, o ritmo quebra — e a vaga fica para quem aguentou até o fim.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section>
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Como funciona</span>
+      <h2>Tudo pronto. Você só precisa revisar.</h2>
+      <p>Sem montar nada do zero. Abre o app e estuda o que importa, no seu ritmo.</p>
+    </div>
+    <div class="feats">
+      <div class="feat reveal">
+        <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="14" height="11" rx="2" stroke="#C9430F" stroke-width="2"/><rect x="7" y="8" width="14" height="11" rx="2" fill="#FBE3D4" stroke="#C9430F" stroke-width="2"/></svg></div>
+        <h3>Coleções prontas</h3>
+        <p>Decks organizados por matéria e por concurso específico, escritos para fixar — não para você reescrever.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#C9430F" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#C9430F" stroke-width="2" stroke-linecap="round"/></svg></div>
+        <h3>Revisão na hora certa</h3>
+        <p>O app calcula quando você está prestes a esquecer e traz o cartão de volta. Menos tempo, mais retenção.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 19V5l7 4 7-4v14l-7-4-7 4z" stroke="#C9430F" stroke-width="2" stroke-linejoin="round"/></svg></div>
+        <h3>Seu progresso, visível</h3>
+        <p>Veja o que já fixou e o que falta. Acompanhar o avanço todo dia é o combustível que te mantém na disputa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="vs-sec">
+  <div class="wrap">
+    <div class="section-head center-head reveal">
+      <span class="eyebrow">"Mas isso não é só mais um app de flashcard?"</span>
+      <h2>Não. É o trabalho todo já feito por você.</h2>
+      <p>Apps genéricos e decks soltos te dão a ferramenta e o resto é por sua conta. O MeuConcurso entrega o caminho pronto — e mantém ele atualizado.</p>
+    </div>
+    <div class="vs-grid">
+      <div class="vs-col vs-old reveal">
+        <h3>Montando sozinho</h3>
+        <div class="vs-sub">Apps genéricos e decks soltos</div>
+        <div class="vs-row"><span class="mk">✕</span><span>Você caça decks de estranhos, com qualidade e fonte duvidosas</span></div>
+        <div class="vs-row"><span class="mk">✕</span><span>Lei mudou? O deck continua velho — e você só descobre na prova</span></div>
+        <div class="vs-row"><span class="mk">✕</span><span>Você organiza matéria, concurso e cronograma na unha</span></div>
+        <div class="vs-row"><span class="mk">✕</span><span>Parou uns dias? Voltou pra uma montanha de cartões atrasados</span></div>
+        <div class="vs-row"><span class="mk">✕</span><span>Interface técnica, curva de aprendizado e horas de configuração</span></div>
+      </div>
+      <div class="vs-col vs-new reveal">
+        <h3>Com o MeuConcurso</h3>
+        <div class="vs-sub">Pronto, atualizado e feito pra concurso</div>
+        <div class="vs-row"><span class="mk">✓</span><span>Coleções prontas, escritas e revisadas para concurso público</span></div>
+        <div class="vs-row"><span class="mk">✓</span><span>Conteúdo atualizado quando o edital ou a legislação muda</span></div>
+        <div class="vs-row"><span class="mk">✓</span><span>Já vem separado por matéria e por concurso — não só Direito</span></div>
+        <div class="vs-row"><span class="mk">✓</span><span>Modo Férias: pausa de verdade, sem acúmulo e sem perder o ritmo</span></div>
+        <div class="vs-row"><span class="mk">✓</span><span>Abre e estuda em 10 segundos. Zero configuração.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODO FÉRIAS -->
+<section class="spotlight">
+  <div class="wrap spot-grid">
+    <div class="reveal">
+      <span class="eyebrow">Só aqui</span>
+      <h2>Modo Férias: descanse sem perder o progresso.</h2>
+      <p>Concurso é maratona, não tiro de 100 metros. Quando precisar parar — viagem, prova, ou só respirar — o MeuConcurso congela suas revisões sem zerar seu ritmo. Você volta de onde parou, sem culpa e sem mil cartões atrasados te esperando.</p>
+    </div>
+    <div class="spot-card reveal">
+      <div class="big">Pausar <span>sem punição</span></div>
+      <ul class="spot-list">
+        <li>Congela o cronograma pelo tempo que você escolher</li>
+        <li>Nada de acúmulo impossível na volta</li>
+        <li>Lembretes gentis para retomar quando quiser</li>
+        <li>Feito para quem estuda por meses, não por dias</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- VIP / BETA -->
+<section class="vip" id="vip">
+  <div class="wrap">
+    <div class="section-head center-head reveal">
+      <span class="eyebrow">Acesso antecipado</span>
+      <h2>Seja dos primeiros a testar.</h2>
+      <p>Estamos abrindo um beta para um grupo limitado de concurseiros. Quem entra agora usa antes de todo mundo e ajuda a moldar o app.</p>
+    </div>
+
+    <div class="vip-grid">
+      <div class="vipc reveal"><div class="ic">🚀</div><h3>Use antes de todos</h3><p>Acesso ao beta enquanto o resto ainda está na fila de espera.</p></div>
+      <div class="vipc reveal"><div class="ic">🗳️</div><h3>Voz nas coleções</h3><p>Você vota em qual concurso e quais matérias entram primeiro.</p></div>
+      <div class="vipc reveal"><div class="ic">🎁</div><h3>Sem custo, sem compromisso</h3><p>Entrar é grátis. Você só recebe o convite quando o beta abrir.</p></div>
+    </div>
+
+    <div class="offer-box reveal">
+      <h2>Entre na lista VIP do beta</h2>
+      <p class="sub">As vagas do beta são limitadas para garantir uma boa experiência a cada testador.</p>
+
+      <form action="https://formspree.io/f/mkolwlvp" method="POST" data-form>
+        <input type="hidden" name="_subject" value="Novo cadastro na lista VIP — MeuConcurso">
+        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+
+        <p class="chips-label">Conta pra gente — qual é o seu concurso? <span style="opacity:.6;">(opcional)</span></p>
+        <div class="chips" data-chips>
+          <button type="button" class="chip" data-value="CNU / Federal">CNU / Federal</button>
+          <button type="button" class="chip" data-value="Tribunais">Tribunais</button>
+          <button type="button" class="chip" data-value="Fiscal / Receita">Fiscal / Receita</button>
+          <button type="button" class="chip" data-value="Bancário">Bancário</button>
+          <button type="button" class="chip" data-value="Polícia / Segurança">Polícia / Segurança</button>
+          <button type="button" class="chip" data-value="Saúde">Saúde</button>
+          <button type="button" class="chip" data-value="Carreiras Jurídicas">Carreiras Jurídicas</button>
+          <button type="button" class="chip" data-value="Outro">Outro (não está na lista)</button>
+        </div>
+
+        <div class="custom-concurso" data-custom-wrap>
+          <input type="text" name="concurso_personalizado" placeholder="Digite o nome do seu concurso" data-custom-input aria-label="Digite o nome do seu concurso">
+        </div>
+
+        <input type="hidden" name="concurso" data-concurso-hidden>
+
+        <div class="signup">
+          <input type="email" name="email" placeholder="Seu melhor e-mail" required aria-label="Seu e-mail">
+          <button type="submit" class="btn btn-primary">Quero entrar no beta</button>
+        </div>
+        <div class="toast" data-toast>Vaga garantida na lista VIP. Te avisamos quando o beta abrir. ✦</div>
+        <p class="micro">Você decide se continua quando o app lançar. Zero compromisso.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="background:#fff;">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <span class="eyebrow">Antes que você pergunte</span>
+      <h2>Perguntas frequentes</h2>
+    </div>
+    <div class="faq-list reveal">
+      <details><summary>Já existe app de flashcard grátis. Por que esse?</summary><p>Os apps genéricos te dão a ferramenta vazia: você ainda precisa garimpar decks de estranhos, conferir a qualidade, organizar tudo por concurso e refazer quando a lei muda. O MeuConcurso entrega esse trabalho pronto e atualizado, com Modo Férias e uma interface feita para o concurseiro. Lá você paga com tempo; aqui você só estuda.</p></details>
+      <details><summary>É só para carreiras jurídicas?</summary><p>Não. As coleções cobrem o universo dos concursos — federal, tribunais, fiscal, bancário, segurança, saúde e mais. Você escolhe o seu na hora de entrar na lista.</p></details>
+      <details><summary>Entrar na lista custa alguma coisa?</summary><p>Não. Entrar é grátis e sem compromisso. Você só recebe o convite quando o beta abrir e decide aí se quer continuar.</p></details>
+      <details><summary>Quando o beta abre?</summary><p>Estamos na reta final. A lista VIP é avisada primeiro, por ordem de entrada. <em>(Ajuste com sua data real.)</em></p></details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL -->
+<section class="final">
+  <div class="wrap">
+    <div class="reveal" style="max-width:760px;margin:0 auto;">
+      <span class="eyebrow" style="justify-content:center;">Última chamada</span>
+      <h2 style="margin-top:1rem;">A vaga vai ser de alguém. Por que não a sua?</h2>
+      <p>Comece a estudar do jeito que faz lembrar. Entre na lista VIP enquanto o beta ainda tem vaga.</p>
+      <a href="#vip" class="btn btn-primary">Quero meu acesso antecipado</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div class="brand"><img class="logo" src="/images/logo.png" alt="" aria-hidden="true">MeuConcurso</div>
+    <div>© 2026 MeuConcurso — Flashcards para concursos. Feito para quem vai passar.</div>
+  </div>
+</footer>
+
+<script>
+  const card = document.querySelector('[data-card]');
+  const cards = [
+    {tag:"Direito Administrativo", q:"O princípio da legalidade vincula a Administração do mesmo modo que o particular?", a:"Não — de forma inversa", d:"O particular pode tudo o que a lei não proíbe (autonomia da vontade); a Administração só pode o que a lei autoriza — legalidade estrita (art. 37, caput, CF/88)."},
+    {tag:"Direito Administrativo", q:"Quais são os princípios expressos da Administração Pública na Constituição?", a:"LIMPE", d:"Legalidade, Impessoalidade, Moralidade, Publicidade e Eficiência (art. 37, caput, CF/88)."},
+    {tag:"Direito Constitucional", q:"Emenda constitucional pode suprimir a forma federativa de Estado?", a:"Não — é cláusula pétrea", d:"O art. 60, §4º veda emenda tendente a abolir: a forma federativa, o voto, a separação dos Poderes e os direitos e garantias individuais."},
+    {tag:"Direito Constitucional", q:"Qual ação assegura o conhecimento ou a retificação de informações pessoais em bancos de dados ou registros de caráter público?", a:"Habeas data", d:"Previsto no art. 5º, LXXII, da CF/88. É usado para assegurar o conhecimento de informações relativas à pessoa do impetrante ou para retificar dados quando não se prefira fazê-lo por processo sigiloso, judicial ou administrativo. Não confundir com mandado de segurança, que protege direito líquido e certo não amparado por habeas corpus ou habeas data."},    {tag:"Português", q:"Por que há crase em 'vou à Bahia', mas não em 'vou a São Paulo'?", a:"Pelo artigo do topônimo", d:"A crase é a soma da preposição 'a' com o artigo 'a'. 'Bahia' admite artigo; 'São Paulo' não. Confirmação: se 'volto da', há crase no 'à'."},
+    {tag:"Português", q:"Quando se emprega 'mau' e quando se emprega 'mal'?", a:"Mau ≠ bom · Mal ≠ bem", d:"'Mau' é adjetivo (oposto de bom); 'mal' é advérbio (oposto de bem). Substitua na frase por bom/bem para confirmar."},
+    {tag:"Informática", q:"Como se denomina a fraude que simula instituição confiável para obter senhas e dados?", a:"Phishing", d:"Modalidade de engenharia social, em geral por e-mail ou link falso. Instituições financeiras não solicitam senhas por esses meios."},
+    {tag:"Informática", q:"Qual a principal diferença entre vírus e worm?", a:"O worm dispensa hospedeiro", d:"O vírus depende de um arquivo ou programa hospedeiro para executar; o worm se autorreplica e se dissemina pela rede de forma autônoma."},
+    {tag:"Raciocínio Lógico", q:"Qual a negação correta da proposição 'todo concurseiro é dedicado'?", a:"'Algum não é dedicado'", d:"A negação de uma universal afirmativa ('todo A é B') é a particular negativa ('algum A não é B'). Basta um contraexemplo — não é 'nenhum'."}
+  ];
+  const elTag=document.querySelector('[data-tag]'), elQ=document.querySelector('[data-q]'),
+        elAT=document.querySelector('[data-atitle]'), elAD=document.querySelector('[data-adetail]');
+  let cur=0;
+  function render(i){ const c=cards[i]; if(elTag){elTag.textContent=c.tag;elQ.textContent=c.q;elAT.textContent=c.a;elAD.textContent=c.d;} }
+  function shuffle(){ let n; do{ n=Math.floor(Math.random()*cards.length); }while(n===cur && cards.length>1); cur=n; if(card) card.classList.remove('flipped'); render(cur); }
+  if(card){
+    const flip = ()=>card.classList.toggle('flipped');
+    card.addEventListener('click', flip);
+    card.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){e.preventDefault();flip();} });
+    cur=0; render(cur);
+  }
+  const shuf=document.querySelector('[data-shuffle]');
+  if(shuf) shuf.addEventListener('click', shuffle);
+  document.querySelectorAll('[data-chips]').forEach(chipGroup=>{
+    const form = chipGroup.closest('form');
+    const hidden = form ? form.querySelector('[data-concurso-hidden]') : null;
+    const customWrap = form ? form.querySelector('[data-custom-wrap]') : null;
+    const customInput = form ? form.querySelector('[data-custom-input]') : null;
+    chipGroup.querySelectorAll('.chip').forEach(chip=>{
+      chip.addEventListener('click', ()=>{
+        chipGroup.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+        chip.classList.add('on');
+        const isOutro = chip.dataset.value === 'Outro';
+        if(hidden) hidden.value = chip.dataset.value || chip.textContent.trim();
+        if(customWrap) customWrap.classList.toggle('show', isOutro);
+        if(customInput){
+          customInput.required = isOutro;
+          if(isOutro) customInput.focus();
+          else customInput.value = '';
+        }
+      });
+    });
+  });
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.14});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+  document.querySelectorAll('[data-form]').forEach(form=>{
+    const toast = form.querySelector('[data-toast]') || form.parentElement.querySelector('[data-toast]');
+    if(toast) toast.dataset.successText = toast.textContent;
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      const btn = form.querySelector('button[type="submit"]');
+      const originalLabel = btn ? btn.textContent : '';
+      if(btn){ btn.disabled = true; btn.textContent = 'Enviando…'; }
+
+      try{
+        const res = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if(res.ok){
+          if(toast){
+            toast.textContent = toast.dataset.successText;
+            toast.style.background = '';
+            toast.classList.add('show');
+          }
+          form.reset();
+          form.querySelectorAll('.chip.on').forEach(c=>c.classList.remove('on'));
+          const customWrap = form.querySelector('[data-custom-wrap]');
+          if(customWrap) customWrap.classList.remove('show');
+          const hidden = form.querySelector('[data-concurso-hidden]');
+          if(hidden) hidden.value = '';
+        } else {
+          if(toast){
+            toast.textContent = 'Algo deu errado. Tente de novo em alguns instantes.';
+            toast.style.background = '#a83809';
+            toast.classList.add('show');
+          }
+        }
+      } catch(err){
+        if(toast){
+          toast.textContent = 'Sem conexão. Verifique sua internet e tente novamente.';
+          toast.style.background = '#a83809';
+          toast.classList.add('show');
+        }
+      } finally {
+        if(btn){ btn.disabled = false; btn.textContent = originalLabel; }
+      }
+    });
+  });
+</script>
+</body>
+</html>
