@@ -27,16 +27,18 @@
   .eyebrow{font-family:'Bricolage Grotesque',sans-serif;font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;color:var(--orange-deep);display:inline-flex;align-items:center;gap:.5rem;}
   .eyebrow::before{content:"";width:22px;height:2px;background:var(--orange);display:inline-block;}
 
-  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:1.02rem;padding:.9rem 1.5rem;border-radius:999px;border:none;cursor:pointer;text-decoration:none;transition:transform .15s ease,background .15s ease;}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:1.02rem;padding:.9rem 1.5rem;border-radius:999px;border:none;cursor:pointer;text-decoration:none;white-space:nowrap;transition:transform .15s ease,background .15s ease;}
   .btn-primary{background:var(--orange-deep);color:#fff;box-shadow:0 8px 22px -10px rgba(201,67,15,.7);}
   .btn-primary:hover{background:#a83809;transform:translateY(-2px);}
   .btn:disabled{opacity:.65;cursor:not-allowed;transform:none;}
 
   header.site{position:sticky;top:0;z-index:50;background:rgba(251,246,238,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
-  .nav{display:flex;align-items:center;justify-content:space-between;height:70px;}
-  .brand{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:-.03em;display:flex;align-items:center;gap:.5rem;}
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:14px;height:70px;}
+  .brand{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:-.03em;display:flex;align-items:center;gap:.5rem;min-width:0;}
   .brand .logo{width:34px;height:34px;flex:0 0 auto;object-fit:contain;}
-  .nav .btn{padding:.6rem 1.15rem;font-size:.95rem;}
+  .nav .btn{padding:.6rem 1.15rem;font-size:.95rem;flex:0 0 auto;}
+  /* Texto curto do botão do cabeçalho — só aparece no mobile */
+  .nav .btn .btn-short{display:none;}
 
   /* HERO */
   .hero{padding:60px 0 70px;}
@@ -191,6 +193,22 @@
     .hero{padding:42px 0 54px;}
     section{padding:58px 0;}
   }
+
+  
+  @media(max-width:600px){
+    .wrap{padding:0 16px;}
+    .nav{height:60px;gap:10px;}
+    .brand{font-size:1.18rem;gap:.4rem;min-width:0;}
+    .brand .logo{width:28px;height:28px;}
+    .nav .btn{padding:.5rem .9rem;font-size:.85rem;}
+    .nav .btn .btn-full{display:none;}
+    .nav .btn .btn-short{display:inline;}
+  }
+  @media(max-width:360px){
+    .brand{font-size:1.02rem;}
+    .nav .btn{padding:.48rem .8rem;font-size:.8rem;}
+  }
+
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important;}
     .reveal{opacity:1;transform:none;}
@@ -202,8 +220,8 @@
 <!-- HEADER -->
 <header class="site">
   <div class="wrap nav">
-    <div class="brand"><img class="logo" src="/images/logo.png"alt="" aria-hidden="true">MeuConcurso</div>
-    <a href="#vip" class="btn btn-primary">Entrar na lista VIP</a>
+    <div class="brand"><img class="logo" src="/images/logo.png" alt="" aria-hidden="true">MeuConcurso</div>
+    <a href="#vip" class="btn btn-primary"><span class="btn-full">Entrar na lista VIP</span><span class="btn-short">Lista VIP</span></a>
   </div>
 </header>
 
@@ -424,7 +442,7 @@
   <div class="wrap">
     <div class="reveal" style="max-width:760px;margin:0 auto;">
       <span class="eyebrow" style="justify-content:center;">Última chamada</span>
-      <h2 style="margin-top:1rem;">A vaga vai ser de alguém. Por que não a sua?</h2>
+      <h2 style="margin-top:1rem;">A vaga vai ser de alguém. Por que não sua?</h2>
       <p>Comece a estudar do jeito que faz lembrar. Entre na lista VIP enquanto o beta ainda tem vaga.</p>
       <a href="#vip" class="btn btn-primary">Quero meu acesso antecipado</a>
     </div>
@@ -444,7 +462,8 @@
     {tag:"Direito Administrativo", q:"O princípio da legalidade vincula a Administração do mesmo modo que o particular?", a:"Não — de forma inversa", d:"O particular pode tudo o que a lei não proíbe (autonomia da vontade); a Administração só pode o que a lei autoriza — legalidade estrita (art. 37, caput, CF/88)."},
     {tag:"Direito Administrativo", q:"Quais são os princípios expressos da Administração Pública na Constituição?", a:"LIMPE", d:"Legalidade, Impessoalidade, Moralidade, Publicidade e Eficiência (art. 37, caput, CF/88)."},
     {tag:"Direito Constitucional", q:"Emenda constitucional pode suprimir a forma federativa de Estado?", a:"Não — é cláusula pétrea", d:"O art. 60, §4º veda emenda tendente a abolir: a forma federativa, o voto, a separação dos Poderes e os direitos e garantias individuais."},
-    {tag:"Direito Constitucional", q:"Qual ação assegura o conhecimento ou a retificação de informações pessoais em bancos de dados ou registros de caráter público?", a:"Habeas data", d:"Previsto no art. 5º, LXXII, da CF/88. É usado para assegurar o conhecimento de informações relativas à pessoa do impetrante ou para retificar dados quando não se prefira fazê-lo por processo sigiloso, judicial ou administrativo. Não confundir com mandado de segurança, que protege direito líquido e certo não amparado por habeas corpus ou habeas data."},    {tag:"Português", q:"Por que há crase em 'vou à Bahia', mas não em 'vou a São Paulo'?", a:"Pelo artigo do topônimo", d:"A crase é a soma da preposição 'a' com o artigo 'a'. 'Bahia' admite artigo; 'São Paulo' não. Confirmação: se 'volto da', há crase no 'à'."},
+    {tag:"Direito Constitucional", q:"Qual ação assegura o conhecimento ou a retificação de informações pessoais em bancos de dados ou registros de caráter público?", a:"Habeas data", d:"Previsto no art. 5º, LXXII, da CF/88. É usado para assegurar o conhecimento de informações relativas à pessoa do impetrante ou para retificar dados quando não se prefira fazê-lo por processo sigiloso, judicial ou administrativo. Não confundir com mandado de segurança, que protege direito líquido e certo não amparado por habeas corpus ou habeas data."},
+    {tag:"Português", q:"Por que há crase em 'vou à Bahia', mas não em 'vou a São Paulo'?", a:"Pelo artigo do topônimo", d:"A crase é a soma da preposição 'a' com o artigo 'a'. 'Bahia' admite artigo; 'São Paulo' não. Confirmação: se 'volto da', há crase no 'à'."},
     {tag:"Português", q:"Quando se emprega 'mau' e quando se emprega 'mal'?", a:"Mau ≠ bom · Mal ≠ bem", d:"'Mau' é adjetivo (oposto de bom); 'mal' é advérbio (oposto de bem). Substitua na frase por bom/bem para confirmar."},
     {tag:"Informática", q:"Como se denomina a fraude que simula instituição confiável para obter senhas e dados?", a:"Phishing", d:"Modalidade de engenharia social, em geral por e-mail ou link falso. Instituições financeiras não solicitam senhas por esses meios."},
     {tag:"Informática", q:"Qual a principal diferença entre vírus e worm?", a:"O worm dispensa hospedeiro", d:"O vírus depende de um arquivo ou programa hospedeiro para executar; o worm se autorreplica e se dissemina pela rede de forma autônoma."},
