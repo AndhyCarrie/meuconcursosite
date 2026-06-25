@@ -5,11 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MeuConcurso — Lembre na hora da prova</title>
 
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="icon" href="/images/logo.png">
 
 <style>
   :root{
@@ -37,7 +35,7 @@
   .brand{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:1.4rem;letter-spacing:-.03em;display:flex;align-items:center;gap:.5rem;min-width:0;}
   .brand .logo{width:34px;height:34px;flex:0 0 auto;object-fit:contain;}
   .nav .btn{padding:.6rem 1.15rem;font-size:.95rem;flex:0 0 auto;}
-  /* Texto curto do botão do cabeçalho — só aparece no mobile */
+  /* Texto curto do botão do cabeçalho —  mobile */
   .nav .btn .btn-short{display:none;}
 
   /* HERO */
@@ -50,9 +48,10 @@
   .signup input[type=email]{flex:1;min-width:210px;padding:.95rem 1.1rem;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-size:1rem;font-family:inherit;color:var(--ink);}
   .signup input[type=email]:focus{outline:3px solid var(--peach);border-color:var(--orange);}
   .micro{font-size:.9rem;color:var(--ink-soft);margin-top:.95rem;display:flex;align-items:center;gap:.45rem;flex-wrap:wrap;}
-  .scarce{display:inline-flex;align-items:center;gap:.45rem;background:var(--peach);color:var(--orange-deep);font-weight:600;font-size:.85rem;padding:.35rem .8rem;border-radius:999px;margin-bottom:1.4rem;font-family:'Bricolage Grotesque',sans-serif;}
-  .scarce .live{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:pulse 1.6s infinite;}
-  @keyframes pulse{0%,100%{opacity:.4;transform:scale(1);}50%{opacity:1;transform:scale(1.5);}}
+
+  /* substituímos a badge de escassez falsa por algo honesto */
+  .building-badge{display:inline-flex;align-items:center;gap:.55rem;background:var(--peach);color:var(--orange-deep);font-weight:600;font-size:.85rem;padding:.38rem .9rem;border-radius:999px;margin-bottom:1.4rem;font-family:'Bricolage Grotesque',sans-serif;}
+  .building-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--orange);flex:0 0 auto;}
 
   /* FLASHCARD */
   .deck-wrap{display:flex;flex-direction:column;align-items:center;gap:18px;width:100%;}
@@ -74,6 +73,7 @@
   .fc-hint{margin-top:auto;font-size:.82rem;color:var(--ink-soft);display:flex;align-items:center;gap:.45rem;}
   .fc-back .fc-hint{color:#cdbfae;}
   .fc-hint .pulse{width:8px;height:8px;border-radius:50%;background:var(--orange);animation:pulse 1.8s infinite;}
+  @keyframes pulse{0%,100%{opacity:.4;transform:scale(1);}50%{opacity:1;transform:scale(1.5);}}
 
   section{padding:76px 0;}
   .section-head{max-width:660px;margin-bottom:46px;}
@@ -138,7 +138,15 @@
   .spot-list li{display:flex;gap:.7rem;align-items:flex-start;margin-bottom:.8rem;color:#e6f2ec;font-size:1rem;}
   .spot-list li::before{content:"";flex:0 0 auto;margin-top:.5rem;width:7px;height:7px;border-radius:50%;background:#7fd1b0;}
 
-  /* VIP / BETA */
+  /* ENQUANTO CONSTRUÍMOS — nova seção */
+  .while-building{background:#fff;}
+  .wb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .wb-card{border-radius:var(--radius);border:1px solid var(--line);padding:28px 26px;background:var(--paper);}
+  .wb-card .num{font-family:'Bricolage Grotesque',sans-serif;font-size:2rem;font-weight:800;color:var(--orange);line-height:1;margin-bottom:12px;}
+  .wb-card h3{font-size:1.12rem;margin-bottom:.45rem;}
+  .wb-card p{color:var(--ink-soft);font-size:.96rem;margin:0;}
+
+  /* VIP / LISTA */
   .vip{background:var(--peach);}
   .vip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:42px;}
   .vipc{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px;text-align:center;}
@@ -175,7 +183,6 @@
   .final{text-align:center;}
   .final h2{font-size:clamp(2rem,4vw,3rem);max-width:18ch;margin:0 auto 1rem;}
   .final p{color:var(--ink-soft);font-size:1.15rem;max-width:46ch;margin:0 auto 1.8rem;}
-  .final .signup{margin:0 auto;justify-content:center;}
 
   footer{background:var(--ink);color:#c3b6a8;padding:44px 0;font-size:.92rem;}
   .foot{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;}
@@ -189,26 +196,23 @@
   @media(max-width:860px){
     .hero-grid,.spot-grid,.vs-grid{grid-template-columns:1fr;gap:32px;}
     .deck-wrap{order:-1;}
-    .pains,.feats,.vip-grid{grid-template-columns:1fr;}
+    .pains,.feats,.vip-grid,.wb-grid{grid-template-columns:1fr;}
     .hero{padding:42px 0 54px;}
     section{padding:58px 0;}
   }
-
-  
   @media(max-width:600px){
     .wrap{padding:0 16px;}
     .nav{height:60px;gap:10px;}
-    .brand{font-size:1.18rem;gap:.4rem;min-width:0;}
     .brand .logo{width:28px;height:28px;}
     .nav .btn{padding:.5rem .9rem;font-size:.85rem;}
     .nav .btn .btn-full{display:none;}
     .nav .btn .btn-short{display:inline;}
+    .offer-box{padding:36px 24px;}
   }
   @media(max-width:360px){
     .brand{font-size:1.02rem;}
     .nav .btn{padding:.48rem .8rem;font-size:.8rem;}
   }
-
   @media(prefers-reduced-motion:reduce){
     *{animation:none!important;transition:none!important;}
     .reveal{opacity:1;transform:none;}
@@ -220,8 +224,11 @@
 <!-- HEADER -->
 <header class="site">
   <div class="wrap nav">
-    <div class="brand"><img class="logo" src="/images/logo.png" alt="" aria-hidden="true">MeuConcurso</div>
-    <a href="#vip" class="btn btn-primary"><span class="btn-full">Entrar na lista VIP</span><span class="btn-short">Lista VIP</span></a>
+     <div class="brand"><img class="logo" src="/images/logo.png" alt="" aria-hidden="true">MeuConcurso</div>
+    <a href="#lista" class="btn btn-primary">
+      <span class="btn-full">Acompanhar desde o início</span>
+      <span class="btn-short">Acompanhar</span>
+    </a>
   </div>
 </header>
 
@@ -229,20 +236,16 @@
 <section class="hero">
   <div class="wrap hero-grid">
     <div>
-      <span class="scarce"><span class="live"></span>Acesso antecipado · vagas do beta limitadas</span>
-      <h1>O que separa o aprovado do reprovado quase nunca é estudar mais. É <span class="hl">lembrar na hora da prova.</span></h1>
-      <p class="lead">MeuConcurso fixa o que você estuda com revisão espaçada e te faz lembrar no dia que decide tudo. Entre na lista VIP e seja dos primeiros a testar o beta.</p>
+      <span class="building-badge"><span class="dot"></span>Em construção — acompanhe desde o primeiro dia</span>
+      <h1>O inimigo da aprovação não é estudar de menos.  <br> <span class="hl">É esquecer na hora que importa.</span></h1>
+      <p class="lead"> O MeuConcurso usa revisão espaçada para fixar o que você estuda — e te fazer lembrar no dia que decide tudo. Estamos construindo isso agora, e você pode fazer parte desde o começo.</p>
 
-      <form class="signup" action="https://formspree.io/f/mkolwlvp" method="POST" data-form>
-        <input type="hidden" name="_subject" value="Novo lead — Hero — MeuConcurso">
-        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
-         <a href="#vip" class="btn btn-primary">Garantir meu acesso</a>
-
-      </form>
-      <div class="toast" data-toast>Você está na lista VIP do beta. Avisaremos você em primeira mão. ✦</div>
+      <div class="signup">
+        <a href="#lista" class="btn btn-primary">Quero acompanhar a construção</a>
+      </div>
       <p class="micro">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M20 6 9 17l-5-5" stroke="#1F4D3F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        Grátis para entrar. Sem spam. Saia quando quiser.
+        Grátis. Você vote nas matérias. Saia quando quiser.
       </p>
     </div>
 
@@ -294,7 +297,7 @@
 <section>
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="eyebrow">Como funciona</span>
+      <span class="eyebrow">O que estamos construindo</span>
       <h2>Tudo pronto. Você só precisa revisar.</h2>
       <p>Sem montar nada do zero. Abre o app e estuda o que importa, no seu ritmo.</p>
     </div>
@@ -313,6 +316,34 @@
         <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 19V5l7 4 7-4v14l-7-4-7 4z" stroke="#C9430F" stroke-width="2" stroke-linejoin="round"/></svg></div>
         <h3>Seu progresso, visível</h3>
         <p>Veja o que já fixou e o que falta. Acompanhar o avanço todo dia é o combustível que te mantém na disputa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ENQUANTO CONSTRUÍMOS — nova seção honesta -->
+<section class="while-building">
+  <div class="wrap">
+    <div class="section-head center-head reveal">
+      <span class="eyebrow">Enquanto o app não chega</span>
+      <h2>Entrar cedo vale a pena. Veja o que você recebe.</h2>
+      <p>Quem acompanha desde o início não fica parado esperando — recebe conteúdo real, tem voz no produto e entra primeiro.</p>
+    </div>
+    <div class="wb-grid">
+      <div class="wb-card reveal">
+        <div class="num">01</div>
+        <h3>Flashcard da semana</h3>
+        <p>Todo semana um cartão de alto impacto no seu e-mail — macete, pegadinha de prova ou conceito que cai sempre. Grátis, já.</p>
+      </div>
+      <div class="wb-card reveal">
+        <div class="num">02</div>
+        <h3>Você vota no que entra</h3>
+        <p>Qual concurso, quais matérias, qual formato. Quem está na lista decide o que o MeuConcurso vai ser antes de lançar.</p>
+      </div>
+      <div class="wb-card reveal">
+        <div class="num">03</div>
+        <h3>Acesso antes de todo mundo</h3>
+        <p>Quando o app abrir, a lista entra em ordem de chegada. Quem entrou primeiro sai na frente — sem depender de sorteio.</p>
       </div>
     </div>
   </div>
@@ -353,9 +384,9 @@
 <section class="spotlight">
   <div class="wrap spot-grid">
     <div class="reveal">
-      <span class="eyebrow">Só aqui</span>
+      <span class="eyebrow">Já planejado</span>
       <h2>Modo Férias: descanse sem perder o progresso.</h2>
-      <p>Concurso é maratona, não tiro de 100 metros. Quando precisar parar — viagem, prova, ou só respirar — o MeuConcurso congela suas revisões sem zerar seu ritmo. Você volta de onde parou, sem culpa e sem mil cartões atrasados te esperando.</p>
+      <p>Concurso é maratona, não tiro de 100 metros. Quando precisar parar — viagem, prova, ou só respirar — o MeuConcurso vai congelar suas revisões sem zerar seu ritmo. Você volta de onde parou, sem culpa e sem mil cartões atrasados te esperando.</p>
     </div>
     <div class="spot-card reveal">
       <div class="big">Pausar <span>sem punição</span></div>
@@ -369,30 +400,30 @@
   </div>
 </section>
 
-<!-- VIP / BETA -->
-<section class="vip" id="vip">
+<!-- LISTA / VIP -->
+<section class="vip" id="lista">
   <div class="wrap">
     <div class="section-head center-head reveal">
-      <span class="eyebrow">Acesso antecipado</span>
-      <h2>Seja dos primeiros a testar.</h2>
-      <p>Estamos abrindo um beta para um grupo limitado de concurseiros. Quem entra agora usa antes de todo mundo e ajuda a moldar o app.</p>
+      <span class="eyebrow">Faça parte desde o começo</span>
+      <h2>Ajude a moldar o MeuConcurso.</h2>
+      <p>Estamos construindo o app e abrindo a lista para quem quer acompanhar a jornada — dar opinião, receber conteúdo e entrar primeiro quando chegar a hora.</p>
     </div>
 
     <div class="vip-grid">
-      <div class="vipc reveal"><div class="ic">🚀</div><h3>Use antes de todos</h3><p>Acesso ao beta enquanto o resto ainda está na fila de espera.</p></div>
-      <div class="vipc reveal"><div class="ic">🗳️</div><h3>Voz nas coleções</h3><p>Você vota em qual concurso e quais matérias entram primeiro.</p></div>
-      <div class="vipc reveal"><div class="ic">🎁</div><h3>Sem custo, sem compromisso</h3><p>Entrar é grátis. Você só recebe o convite quando o beta abrir.</p></div>
+      <div class="vipc reveal"><div class="ic">📬</div><h3>Flashcard toda semana</h3><p>Um cartão de alto impacto direto no seu e-mail — enquanto o app ainda não existe.</p></div>
+      <div class="vipc reveal"><div class="ic">🗳️</div><h3>Voz no produto</h3><p>Você vota nas matérias e concursos que entram primeiro. Sua fila, suas regras.</p></div>
+      <div class="vipc reveal"><div class="ic">🚀</div><h3>Acesso antes de todos</h3><p>Lista de espera organizada por ordem de entrada. Sem sorteio, sem surpresa.</p></div>
     </div>
 
     <div class="offer-box reveal">
-      <h2>Entre na lista VIP do beta</h2>
-      <p class="sub">As vagas do beta são limitadas para garantir uma boa experiência a cada testador.</p>
+      <h2>Entre na lista e acompanhe a construção</h2>
+      <p class="sub">Sem data prometida. Sem pressa falsa. Só conteúdo real enquanto construímos algo que vai durar.</p>
 
       <form action="https://formspree.io/f/mkolwlvp" method="POST" data-form>
-        <input type="hidden" name="_subject" value="Novo cadastro na lista VIP — MeuConcurso">
+        <input type="hidden" name="_subject" value="Novo cadastro na lista — MeuConcurso">
         <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
 
-        <p class="chips-label">Conta pra gente — qual é o seu concurso? <span style="opacity:.6;"></span></p>
+        <p class="chips-label">Conta pra gente — qual é o seu concurso?</p>
         <div class="chips" data-chips>
           <button type="button" class="chip" data-value="CNU / Federal">CNU / Federal</button>
           <button type="button" class="chip" data-value="Tribunais">Tribunais</button>
@@ -412,10 +443,10 @@
 
         <div class="signup">
           <input type="email" name="email" placeholder="Seu melhor e-mail" required aria-label="Seu e-mail">
-          <button type="submit" class="btn btn-primary">Garantir meu acesso</button>
+          <button type="submit" class="btn btn-primary">Entrar na lista</button>
         </div>
-        <div class="toast" data-toast>Vaga garantida na lista VIP. Te avisamos quando o beta abrir. ✦</div>
-        <p class="micro">Você decide se continua quando o app lançar. Zero compromisso.</p>
+        <div class="toast" data-toast>Você está na lista. Flashcard na semana que vem — e acesso em primeira mão quando o app chegar. ✦</div>
+        <p class="micro">Grátis e sem compromisso. Você decide se continua quando o app lançar.</p>
       </form>
     </div>
   </div>
@@ -430,9 +461,10 @@
     </div>
     <div class="faq-list reveal">
       <details><summary>Já existe app de flashcard grátis. Por que esse?</summary><p>Os apps genéricos te dão a ferramenta vazia: você ainda precisa garimpar decks de estranhos, conferir a qualidade, organizar tudo por concurso e refazer quando a lei muda. O MeuConcurso entrega esse trabalho pronto e atualizado, com Modo Férias e uma interface feita para o concurseiro. Lá você paga com tempo; aqui você só estuda.</p></details>
-      <details><summary>É só para carreiras jurídicas?</summary><p>Não. As coleções cobrem o universo dos concursos — federal, tribunais, fiscal, bancário, segurança, saúde e mais. Você escolhe o seu na hora de entrar na lista.</p></details>
-      <details><summary>Entrar na lista custa alguma coisa?</summary><p>Não. Entrar é grátis e sem compromisso. Você só recebe o convite quando o beta abrir e decide aí se quer continuar.</p></details>
-      <details><summary>Quando o beta abre?</summary><p>Estamos na reta final. A lista VIP é avisada primeiro, por ordem de entrada.</details>
+      <details><summary>É só para carreiras jurídicas?</summary><p>Não. As coleções vão cobrir o universo dos concursos — federal, tribunais, fiscal, bancário, segurança, saúde e mais. Você escolhe o seu na hora de entrar na lista e isso vai direto para as nossas decisões de prioridade.</p></details>
+      <details><summary>Entrar na lista custa alguma coisa?</summary><p>Não. Entrar é grátis e sem compromisso. Você recebe conteúdo enquanto construímos e decide se quer continuar quando o app lançar.</p></details>
+      <details><summary>Quando o app vai lançar?</summary><p>Estamos em desenvolvimento ativo. Não temos data pública porque preferimos fazer certo a fazer rápido. Quem está na lista acompanha cada etapa — e entra primeiro, por ordem de chegada, quando abrirmos.</p></details>
+      <details><summary>O que eu recebo enquanto espero?</summary><p>Toda semana enviamos um flashcard de alto impacto por e-mail — um macete, uma pegadinha clássica de prova ou um conceito que cai com frequência. Você também vai receber atualizações sobre o desenvolvimento e a chance de votar nas próximas matérias. É conteúdo de verdade, não newsletter de produto vazio.</p></details>
     </div>
   </div>
 </section>
@@ -443,8 +475,8 @@
     <div class="reveal" style="max-width:760px;margin:0 auto;">
       <span class="eyebrow" style="justify-content:center;">Última chamada</span>
       <h2 style="margin-top:1rem;">A vaga vai ser de alguém. Por que não sua?</h2>
-      <p>Comece a estudar do jeito que faz lembrar. Entre na lista VIP enquanto o beta ainda tem vaga.</p>
-      <a href="#vip" class="btn btn-primary">Quero meu acesso antecipado</a>
+      <p>Começe acompanhando a construção. Receba conteúdo real toda semana. Entre primeiro quando o app chegar.</p>
+      <a href="#lista" class="btn btn-primary">Quero acompanhar desde o início</a>
     </div>
   </div>
 </section>
@@ -462,7 +494,7 @@
     {tag:"Direito Administrativo", q:"O princípio da legalidade vincula a Administração do mesmo modo que o particular?", a:"Não — de forma inversa", d:"O particular pode tudo o que a lei não proíbe (autonomia da vontade); a Administração só pode o que a lei autoriza — legalidade estrita (art. 37, caput, CF/88)."},
     {tag:"Direito Administrativo", q:"Quais são os princípios expressos da Administração Pública na Constituição?", a:"LIMPE", d:"Legalidade, Impessoalidade, Moralidade, Publicidade e Eficiência (art. 37, caput, CF/88)."},
     {tag:"Direito Constitucional", q:"Emenda constitucional pode suprimir a forma federativa de Estado?", a:"Não — é cláusula pétrea", d:"O art. 60, §4º veda emenda tendente a abolir: a forma federativa, o voto, a separação dos Poderes e os direitos e garantias individuais."},
-    {tag:"Direito Constitucional", q:"Qual ação assegura o conhecimento ou a retificação de informações pessoais em bancos de dados ou registros de caráter público?", a:"Habeas data", d:"Previsto no art. 5º, LXXII, da CF/88. É usado para assegurar o conhecimento de informações relativas à pessoa do impetrante ou para retificar dados quando não se prefira fazê-lo por processo sigiloso, judicial ou administrativo. Não confundir com mandado de segurança, que protege direito líquido e certo não amparado por habeas corpus ou habeas data."},
+    {tag:"Direito Constitucional", q:"Qual ação assegura o conhecimento ou a retificação de informações pessoais em bancos de dados ou registros de caráter público?", a:"Habeas data", d:"Previsto no art. 5º, LXXII, da CF/88. Não confundir com mandado de segurança, que protege direito líquido e certo não amparado por habeas corpus ou habeas data."},
     {tag:"Português", q:"Por que há crase em 'vou à Bahia', mas não em 'vou a São Paulo'?", a:"Pelo artigo do topônimo", d:"A crase é a soma da preposição 'a' com o artigo 'a'. 'Bahia' admite artigo; 'São Paulo' não. Confirmação: se 'volto da', há crase no 'à'."},
     {tag:"Português", q:"Quando se emprega 'mau' e quando se emprega 'mal'?", a:"Mau ≠ bom · Mal ≠ bem", d:"'Mau' é adjetivo (oposto de bom); 'mal' é advérbio (oposto de bem). Substitua na frase por bom/bem para confirmar."},
     {tag:"Informática", q:"Como se denomina a fraude que simula instituição confiável para obter senhas e dados?", a:"Phishing", d:"Modalidade de engenharia social, em geral por e-mail ou link falso. Instituições financeiras não solicitam senhas por esses meios."},
@@ -509,20 +541,17 @@
   document.querySelectorAll('[data-form]').forEach(form=>{
     const toast = form.querySelector('[data-toast]') || form.parentElement.querySelector('[data-toast]');
     if(toast) toast.dataset.successText = toast.textContent;
-
     form.addEventListener('submit', async (e)=>{
       e.preventDefault();
       const btn = form.querySelector('button[type="submit"]');
       const originalLabel = btn ? btn.textContent : '';
       if(btn){ btn.disabled = true; btn.textContent = 'Enviando…'; }
-
       try{
         const res = await fetch(form.action, {
           method: 'POST',
           body: new FormData(form),
           headers: { 'Accept': 'application/json' }
         });
-
         if(res.ok){
           if(toast){
             toast.textContent = toast.dataset.successText;
